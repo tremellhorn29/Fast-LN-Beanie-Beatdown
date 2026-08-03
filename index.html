@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <meta name="theme-color" content="#11131b" />
+  <title>FAST LN: Beanie Beatdown</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main id="app">
+    <section id="titleScreen" class="screen active">
+      <div class="title-card">
+        <p class="eyebrow">FAST LN PRESENTS</p>
+        <h1>BEANIE<br><span>BEATDOWN</span></h1>
+        <p class="tagline">Be down… or beat down.</p>
+        <button id="startBtn" class="primary">START THE RENT RUN</button>
+        <p class="controls-note">Keyboard: WASD / Arrows · J attack · K heavy · Space jump</p>
+      </div>
+    </section>
+
+    <section id="gameScreen" class="screen">
+      <header class="hud">
+        <div><strong>BEANIE</strong><span id="healthText">100 HP</span></div>
+        <div class="mission"><small>MISSION</small><strong id="missionText">Reach the courtyard gate</strong></div>
+        <div><strong id="cashText">$0</strong><span>RENT FUND</span></div>
+      </header>
+
+      <div id="gameWrap">
+        <canvas id="game" width="960" height="540" aria-label="Beanie Beatdown game"></canvas>
+        <div id="dialogue" class="dialogue hidden">
+          <strong id="speaker">BEANIE</strong>
+          <p id="dialogueText"></p>
+          <button id="dialogueNext">A</button>
+        </div>
+      </div>
+
+      <div class="mobile-controls" aria-label="Touch controls">
+        <div class="dpad">
+          <button data-key="left">◀</button>
+          <button data-key="right">▶</button>
+        </div>
+        <div class="actions">
+          <button data-key="jump">B</button>
+          <button data-key="attack" class="action-a">A</button>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script src="game.js"></script>
+</body>
+</html>
