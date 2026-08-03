@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
   <meta name="theme-color" content="#11131b" />
   <title>FAST LN: Beanie Beatdown</title>
-  <link rel="stylesheet" href="style.css?v=3" />
+  <link rel="stylesheet" href="style.css?v=4" />
 </head>
 <body>
   <main id="app">
@@ -14,9 +14,50 @@
         <p class="eyebrow">FAST LN PRESENTS</p>
         <h1>BEANIE<br><span>BEATDOWN</span></h1>
         <p class="tagline">Be down… or beat down.</p>
-        <button id="startBtn" class="primary">START THE RENT RUN</button>
-        <p class="controls-note">Keyboard: WASD / Arrows · J light · K heavy · L dodge · Space jump</p>
-        <p class="controls-note">DualSense / DualShock: Left stick or D-pad move · □ light · △ heavy · ✕ jump/confirm · ○ dodge</p>
+        <button id="startBtn" class="primary">ENTER BEANIE HQ</button>
+        <p class="controls-note">DualSense / DualShock: ✕ confirm · ○ back · D-pad or stick navigate</p>
+      </div>
+    </section>
+
+    <section id="menuScreen" class="screen">
+      <div class="hq-shell">
+        <header class="hq-header">
+          <div><p class="eyebrow">SOUTH COVE</p><h2>BEANIE HQ</h2></div>
+          <div class="hq-wallet"><span>RENT FUND</span><strong id="menuCash">$0</strong></div>
+        </header>
+
+        <div class="hq-grid">
+          <section class="character-card">
+            <div class="bean-portrait"><span>BEANIE</span></div>
+            <h3>THE SELF-APPOINTED DIPLOMAT</h3>
+            <p>Level <strong id="levelText">1</strong> · Reputation <strong id="repText">0</strong></p>
+            <p class="small-copy">He came to build unity. Everybody else heard violence.</p>
+          </section>
+
+          <section class="build-card">
+            <div class="points-row"><h3>BUILD</h3><span>Upgrade points: <strong id="pointsText">0</strong></span></div>
+            <div class="stat-row"><div><b>Strength</b><small>Attack damage</small></div><span id="strengthText">1</span><button data-upgrade="strength">+</button></div>
+            <div class="stat-row"><div><b>Toughness</b><small>Maximum health</small></div><span id="toughnessText">1</span><button data-upgrade="toughness">+</button></div>
+            <div class="stat-row"><div><b>Speed</b><small>Movement and dodge</small></div><span id="speedText">1</span><button data-upgrade="speed">+</button></div>
+            <div class="stat-row"><div><b>Technique</b><small>Heavy attack power</small></div><span id="techniqueText">1</span><button data-upgrade="technique">+</button></div>
+          </section>
+
+          <section class="ability-card">
+            <h3>ABILITIES</h3>
+            <div class="ability unlocked"><b>Community Outreach</b><span>Basic three-hit pressure</span></div>
+            <div class="ability locked" id="abilityTwo"><b>No Repetition</b><span>Unlocks at Level 2</span></div>
+            <div class="ability locked" id="abilityThree"><b>Coalition Building</b><span>Unlocks at Level 3</span></div>
+          </section>
+
+          <section class="mission-card">
+            <p class="eyebrow">AVAILABLE RUN</p>
+            <h3>THE COURTYARD OFFER</h3>
+            <p>Recruit South Cove—or provide a demonstration.</p>
+            <div class="reward-line"><span>Reward</span><strong>$100 + 1 upgrade point</strong></div>
+            <button id="playBtn" class="primary">START LEVEL</button>
+            <button id="resetBtn" class="secondary">RESET SAVE</button>
+          </section>
+        </div>
       </div>
     </section>
 
@@ -24,7 +65,7 @@
       <header class="hud">
         <div><strong>BEANIE</strong><span id="healthText">100 HP</span></div>
         <div class="mission"><small>MISSION</small><strong id="missionText">Reach the courtyard gate</strong></div>
-        <div><strong id="cashText">$0</strong><span>RENT FUND</span></div>
+        <div><strong id="cashText">$0</strong><span>RUN CASH</span></div>
       </header>
 
       <div id="gameWrap">
@@ -34,20 +75,21 @@
           <p id="dialogueText"></p>
           <button id="dialogueNext">A</button>
         </div>
+        <div id="endCard" class="end-card hidden">
+          <p class="eyebrow">RUN COMPLETE</p>
+          <h2>COURTYARD CLEARED</h2>
+          <p>South Cove heard the offer.</p>
+          <div id="rewardSummary" class="reward-summary"></div>
+          <button id="returnBtn" class="primary">RETURN TO HQ</button>
+        </div>
       </div>
 
       <div class="mobile-controls" aria-label="Touch controls">
-        <div class="dpad">
-          <button data-key="left">◀</button>
-          <button data-key="right">▶</button>
-        </div>
-        <div class="actions">
-          <button data-key="jump">B</button>
-          <button data-key="attack" class="action-a">A</button>
-        </div>
+        <div class="dpad"><button data-key="left">◀</button><button data-key="right">▶</button></div>
+        <div class="actions"><button data-key="jump">B</button><button data-key="attack" class="action-a">A</button></div>
       </div>
     </section>
   </main>
-  <script src="game.js?v=3"></script>
+  <script src="game.js?v=4"></script>
 </body>
 </html>
