@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
   <meta name="theme-color" content="#11131b" />
   <title>FAST LN: Beanie Beatdown</title>
-  <link rel="stylesheet" href="style.css?v=4" />
+  <link rel="stylesheet" href="style.css?v=5" />
 </head>
 <body>
   <main id="app">
@@ -15,7 +15,7 @@
         <h1>BEANIE<br><span>BEATDOWN</span></h1>
         <p class="tagline">Be down… or beat down.</p>
         <button id="startBtn" class="primary">ENTER BEANIE HQ</button>
-        <p class="controls-note">DualSense / DualShock: ✕ confirm · ○ back · D-pad or stick navigate</p>
+        <p id="padStatus" class="controls-note">Controller: connect DualSense/DualShock, then press any button.</p>
       </div>
     </section>
 
@@ -23,39 +23,42 @@
       <div class="hq-shell">
         <header class="hq-header">
           <div><p class="eyebrow">SOUTH COVE</p><h2>BEANIE HQ</h2></div>
-          <div class="hq-wallet"><span>RENT FUND</span><strong id="menuCash">$0</strong></div>
+          <div class="hq-wallet"><span>CAREER CASH</span><strong id="menuCash">$0</strong><small id="runCount">0 runs</small></div>
         </header>
 
         <div class="hq-grid">
           <section class="character-card">
             <div class="bean-portrait"><span>BEANIE</span></div>
             <h3>THE SELF-APPOINTED DIPLOMAT</h3>
-            <p>Level <strong id="levelText">1</strong> · Reputation <strong id="repText">0</strong></p>
-            <p class="small-copy">He came to build unity. Everybody else heard violence.</p>
+            <p>Level <strong id="levelText">1</strong> · XP <strong id="xpText">0 / 100</strong></p>
+            <p>Reputation <strong id="repText">0</strong> · Best streak <strong id="streakText">0</strong></p>
+            <p class="small-copy">Every completed run pays cash, XP, reputation, and upgrade points. Repeated runs become harder and more valuable.</p>
           </section>
 
           <section class="build-card">
-            <div class="points-row"><h3>BUILD</h3><span>Upgrade points: <strong id="pointsText">0</strong></span></div>
-            <div class="stat-row"><div><b>Strength</b><small>Attack damage</small></div><span id="strengthText">1</span><button data-upgrade="strength">+</button></div>
-            <div class="stat-row"><div><b>Toughness</b><small>Maximum health</small></div><span id="toughnessText">1</span><button data-upgrade="toughness">+</button></div>
-            <div class="stat-row"><div><b>Speed</b><small>Movement and dodge</small></div><span id="speedText">1</span><button data-upgrade="speed">+</button></div>
-            <div class="stat-row"><div><b>Technique</b><small>Heavy attack power</small></div><span id="techniqueText">1</span><button data-upgrade="technique">+</button></div>
+            <div class="points-row"><h3>ATTRIBUTES</h3><span>Upgrade points: <strong id="pointsText">0</strong></span></div>
+            <div class="stat-row"><div><b>Strength</b><small>Light and heavy damage</small></div><span id="strengthText">1</span><button data-upgrade="strength">+</button></div>
+            <div class="stat-row"><div><b>Toughness</b><small>Maximum health and recovery</small></div><span id="toughnessText">1</span><button data-upgrade="toughness">+</button></div>
+            <div class="stat-row"><div><b>Speed</b><small>Movement and dodge distance</small></div><span id="speedText">1</span><button data-upgrade="speed">+</button></div>
+            <div class="stat-row"><div><b>Technique</b><small>Critical chance and heavy timing</small></div><span id="techniqueText">1</span><button data-upgrade="technique">+</button></div>
           </section>
 
           <section class="ability-card">
-            <h3>ABILITIES</h3>
-            <div class="ability unlocked"><b>Community Outreach</b><span>Basic three-hit pressure</span></div>
-            <div class="ability locked" id="abilityTwo"><b>No Repetition</b><span>Unlocks at Level 2</span></div>
-            <div class="ability locked" id="abilityThree"><b>Coalition Building</b><span>Unlocks at Level 3</span></div>
+            <div class="points-row"><h3>PERKS</h3><span>Perk tokens: <strong id="perkPointsText">0</strong></span></div>
+            <button class="perk" data-perk="pressure"><b>Community Pressure</b><span>+12% damage per rank</span><em id="pressureRank">Rank 0</em></button>
+            <button class="perk" data-perk="collector"><b>Rent Collector</b><span>+15% cash reward per rank</span><em id="collectorRank">Rank 0</em></button>
+            <button class="perk" data-perk="secondWind"><b>Second Wind</b><span>Recover health after each knockout</span><em id="secondWindRank">Rank 0</em></button>
+            <button class="perk" data-perk="momentum"><b>Momentum</b><span>Consecutive wins multiply XP and reputation</span><em id="momentumRank">Rank 0</em></button>
           </section>
 
           <section class="mission-card">
             <p class="eyebrow">AVAILABLE RUN</p>
             <h3>THE COURTYARD OFFER</h3>
+            <p id="difficultyText">District pressure: 1</p>
             <p>Recruit South Cove—or provide a demonstration.</p>
-            <div class="reward-line"><span>Reward</span><strong>$100 + 1 upgrade point</strong></div>
+            <div class="reward-line"><span>Projected reward</span><strong id="projectedReward">$100 · 60 XP</strong></div>
             <button id="playBtn" class="primary">START LEVEL</button>
-            <button id="resetBtn" class="secondary">RESET SAVE</button>
+            <button id="resetBtn" class="secondary">RESET CAREER</button>
           </section>
         </div>
       </div>
@@ -71,9 +74,7 @@
       <div id="gameWrap">
         <canvas id="game" width="960" height="540" aria-label="Beanie Beatdown game"></canvas>
         <div id="dialogue" class="dialogue hidden">
-          <strong id="speaker">BEANIE</strong>
-          <p id="dialogueText"></p>
-          <button id="dialogueNext">A</button>
+          <strong id="speaker">BEANIE</strong><p id="dialogueText"></p><button id="dialogueNext">A</button>
         </div>
         <div id="endCard" class="end-card hidden">
           <p class="eyebrow">RUN COMPLETE</p>
@@ -90,6 +91,6 @@
       </div>
     </section>
   </main>
-  <script src="game.js?v=4"></script>
+  <script src="game.js?v=5"></script>
 </body>
 </html>
