@@ -128,53 +128,7 @@
     updateAll();
   };
 
-  // Performance tracking for a lightweight end-of-run grade.
-  let runStartedAt = 0;
-  let startingHealth = 0;
-  let lowestHealth = 0;
-  let gradeAttached = false;
-
-  const priorStart = startRun;
-  startRun = function () {
-    gradeAttached = false;
-    runStartedAt = performance.now();
-    priorStart();
-    startingHealth = Number(player.maxHealth || player.health || 100);
-    lowestHealth = Number(player.health || startingHealth);
-  };
-
-  function gradeRun() {
-    const seconds = Math.max(1, (performance.now() - runStartedAt) / 1000);
-    const remaining = Math.max(0, Number(player.health || 0));
-    const healthRatio = startingHealth ? remaining / startingHealth : 0;
-    let score = 0;
-    if (healthRatio >= .8) score += 2;
-    else if (healthRatio >= .5) score += 1;
-    if (seconds <= 85) score += 2;
-    else if (seconds <= 130) score += 1;
-    if (Number(save.streak || 0) >= 3) score += 1;
-    const grade = score >= 5 ? 'S' : score >= 4 ? 'A' : score >= 2 ? 'B' : 'C';
-    const label = grade === 'S' ? 'NO REPETITION NECESSARY' : grade === 'A' ? 'COMMUNITY PERSUADED' : grade === 'B' ? 'OFFER DELIVERED' : 'EXPLANATION UNCLEAR';
-    return { grade, label, seconds: Math.round(seconds), remaining, lowestHealth };
-  }
-
-  function monitorRun() {
-    if (screens?.game?.classList.contains('active') && typeof player !== 'undefined') {
-      lowestHealth = Math.min(lowestHealth || player.health, Number(player.health || 0));
-    }
-    const endVisible = ui?.end && !ui.end.classList.contains('hidden');
-    const rewardVisible = ui?.reward && ui.reward.textContent.trim().length > 0;
-    if (endVisible && rewardVisible && levelComplete && !gradeAttached) {
-      gradeAttached = true;
-      const result = gradeRun();
-      const gradeBox = document.createElement('div');
-      gradeBox.className = `performance-grade grade-${result.grade.toLowerCase()}`;
-      gradeBox.innerHTML = `<strong>${result.grade}</strong><span>${result.label}</span><small>${result.seconds}s · ${result.remaining} HP remaining</small>`;
-      ui.reward.prepend(gradeBox);
-    }
-    requestAnimationFrame(monitorRun);
-  }
-  requestAnimationFrame(monitorRun);
+  // Economy.js owns end-of-run grading and bonus payment. Avoid duplicate cards.
 
   // Controller shoulder buttons switch HQ tabs; D-pad remains available for boss rewards.
   const tabNames = ['run', 'build', 'perks', 'record'];
