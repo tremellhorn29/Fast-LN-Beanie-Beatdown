@@ -152,20 +152,23 @@
   }
 
   function claimReward(key){
-    save.bossPerks[key] = (save.bossPerks[key] || 0) + 1;
-    persist(); renderBossPerks();
-    rewardModal.classList.add('hidden');
+    // Button, tap and controller events can arrive in the same frame. One claim only.
+    if (!completionPending || levelComplete || rewardModal.classList.contains('hidden')) return;
+    if (!Object.prototype.hasOwnProperty.call(save.bossPerks, key)) return;
     completionPending = false;
-    const cashBefore = save.cash;
+    rewardModal.classList.add('hidden');
+    const oldRank = Math.min(3, Math.max(0, Number(save.bossPerks[key]) || 0));
+    const mastered = oldRank >= 3;
+    save.bossPerks[key] = mastered ? 3 : oldRank + 1;
+    persist(); renderBossPerks();
     previousFinishLevel();
-    let bossBonus = 0;
+    let bossBonus = mastered ? 100 : 0;
     if(key === 'shopTax'){
-      bossBonus = 75 * save.bossPerks.shopTax;
-      save.cash += bossBonus;
-      persist();
+      bossBonus += 75 * save.bossPerks.shopTax;
     }
+    if (bossBonus) { save.cash += bossBonus; persist(); }
     const label = key === 'heavyHands' ? 'Heavy Hands' : key === 'cleanCounter' ? 'Clean Counter' : 'Shop Tax';
-    ui.reward.innerHTML += `<br><strong>Boss perk: ${label} Rank ${save.bossPerks[key]}</strong>${bossBonus ? `<br>Shop Tax bonus: +$${bossBonus}` : ''}`;
+    ui.reward.innerHTML += `<br><strong>${mastered ? 'Mastery payout' : 'Boss perk'}: ${label} Rank ${save.bossPerks[key]}</strong>${bossBonus ? `<br>Bonus cash: +${bossBonus}` : ''}`;
     refreshHQ();
   }
 
