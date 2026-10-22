@@ -1,0 +1,38 @@
+name: Beanie Beatdown quality gate
+
+on:
+  push:
+    branches: [main, "feature/**"]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  browser:
+    name: Syntax + mobile gameplay smoke
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: JavaScript syntax check
+        run: |
+          for file in game.js refine.js boss.js polish.js economy.js tests/browser.cjs; do
+            node --check "$file"
+          done
+      - name: Install browser test runtime
+        run: |
+          npm install --no-save --no-audit --no-fund playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Run iPhone-sized browser smoke
+        run: |
+          python3 -m http.server 8000 --bind 127.0.0.1 > /tmp/fastln-beanie-http.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:8000/ >/dev/null; then break; fi
+            sleep 1
+          done
+          node tests/browser.cjs
